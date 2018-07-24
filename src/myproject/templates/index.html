@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block content %}
+{% for message in get_flashed_messages() %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    {{message}}
+  </div>
+{% endfor %}
+  <div class="jumbotron form-group">
+    <form class="" method="POST">
+      {{select_form.hidden_tag()}}
+      <div class="form-group container">
+        {{select_form.manufacturer_selection.label}}<br>{{select_form.manufacturer_selection(class_="form-control")}}
+      </div>
+
+      <div class="form-group container">
+        {{select_form.model_selection.label}}<br>{{select_form.model_selection(class_="form-control")}}
+      </div>
+
+      <div class="form-group container">
+        {{select_form.trim_selection.label}}<br>{{select_form.trim_selection(class_="form-control")}}
+      </div>
+
+      <div class="container">
+        {{select_form.submit(class_="btn btn-primary")}}
+      </div>
+    </form>
+  </div>
+
+  <script>
+  let manufacturer_select = document.getElementById('manufacturer_selection');
+  let model_select = document.getElementById('model_selection');
+  let trim_select = document.getElementById('trim_selection');
+
+
+  manufacturer_select.onchange = function(){
+    manufacturer = manufacturer_select.value;
+
+    fetch('/models/' + manufacturer).then(function(response){
+      response.json().then(function(data){
+         let optionHTML = '';
+         for(let model of data.models){
+           optionHTML += '<option value="' + model.id + '">' + model.name + '</option>';
+         }
+         //triggers the onchange event, otherwise the trims won't change
+        model_select.innerHTML = optionHTML;
+        event = new Event('change')
+        model_select.dispatchEvent(event)
+      });
+    });
+  }
+
+  // manufacturer_select.onchange = function(){
+  //   model = model_select.value;
+  //
+  //   fetch('/trims/' + model).then(function(response){
+  //     response.json().then(function(data){
+  //        let optionHTML = '';
+  //        for(let trim of data.trims){
+  //          optionHTML += '<option value="' + trim.id + '">' + trim.name + '</option>';
+  //        }
+  //
+  //       trim_select.innerHTML = optionHTML;
+  //     });
+  //   });
+  // }
+  model_select.onchange = function(){
+    model = model_select.value;
+
+    fetch('/trims/' + model).then(function(response){
+      response.json().then(function(data){
+         let optionHTML = '';
+         for(let trim of data.trims){
+           optionHTML += '<option value="' + trim.id + '">' + trim.name + '</option>';
+         }
+
+        trim_select.innerHTML = optionHTML;
+      });
+    });
+  }
+
+  </script>
+{% endblock %}

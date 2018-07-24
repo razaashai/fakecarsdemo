@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="jumbotron">
+    <button class="btn btn-outline-primary btn-lg" type="button" name="button">
+      <a href="{{url_for('add_manufacturer')}}">Add a manufacturer</a>
+    </button>
+    <button class="btn btn-outline-primary btn-lg" type="button" name="button">
+      <a href="{{url_for('add_model')}}">Add a model</a>
+    </button>
+    <button class="btn btn-outline-primary btn-lg" type="button" name="button">
+      <a href="{{url_for('add_trim')}}">Add a trim</a>
+    </button>
+    <button class="btn btn-outline-primary btn-lg" type="button" name="button">
+      <a href="{{url_for('remove_listing')}}">Remove a listing</a>
+    </button>
+  </div>
+{% endblock %}

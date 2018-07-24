@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+{% for message in get_flashed_messages() %}
+{% if message == "You failed to remove the listing" %}
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+      </button>
+      {{message}}
+  </div>
+{% else %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+      </button>
+      {{message}}
+  </div>
+{% endif %}
+{% endfor %}
+
+{% for field in remove_listing_form.errors %}
+{% for error in remove_listing_form.errors[field] %}
+    <div class="error">{{ error }}</div>
+{% endfor %}
+{% endfor %}
+
+
+  <div class="jumbotron">
+    <form class="" method="POST">
+      {{remove_listing_form.hidden_tag()}}
+      {{remove_listing_form.id.label}}<br>{{remove_listing_form.id()}}
+      <br>
+      {{remove_listing_form.submit()}}
+    </form>
+
+  </div>
+{% endblock %}

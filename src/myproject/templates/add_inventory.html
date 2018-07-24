@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block content %}
+{% for message in get_flashed_messages() %}
+{% if message == "Invalid choice" %}
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+      </button>
+      {{message}}
+  </div>
+{% else %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+      </button>
+      {{message}}
+  </div>
+{% endif %}
+{% endfor %}
+
+{% for field in add_listing.errors %}
+{% for error in add_listing.errors[field] %}
+    <div class="error">{{ error }}</div>
+{% endfor %}
+{% endfor %}
+<div class="jumbotron">
+  <h1>Add a Listing!</h1>
+  <p>Add your own listing by selecting from the options below</p>
+  <form class="" method="POST">
+    {{add_listing.hidden_tag()}}
+    {{add_listing.manufacturer.label}}<br>{{add_listing.manufacturer()}}
+    <br><br>
+    {{add_listing.model.label}}<br>{{add_listing.model()}}
+    <br><br>
+    {{add_listing.trim.label}}<br>{{add_listing.trim()}}
+    <br><br>
+    {{add_listing.listed_data.label}}<br>{{add_listing.listed_data()}}
+    <br><br>
+    {{add_listing.ask_price.label}}<br>{{add_listing.ask_price()}}
+    <br><br>
+    {{add_listing.condition.label}}<br>{{add_listing.condition()}}
+    <br>
+    {{add_listing.submit()}}
+  </form>
+</div>
+
+
+<script>
+  let manufacturer_select = document.getElementById('manufacturer');
+  let model_select = document.getElementById('model');
+  let trim_select = document.getElementById('trim');
+
+
+  manufacturer_select.onchange = function(){
+    manufacturer = manufacturer_select.value;
+
+    fetch('/models/' + manufacturer).then(function(response){
+      response.json().then(function(data){
+         let optionHTML = '';
+         for(let model of data.models){
+           optionHTML += '<option value="' + model.id + '">' + model.name + '</option>';
+         }
+         //triggers the onchange event, otherwise the trims won't change
+        model_select.innerHTML = optionHTML;
+        event = new Event('change')
+        model_select.dispatchEvent(event)
+      });
+    });
+  }
+
+  // manufacturer_select.onchange = function(){
+  //   model = model_select.value;
+  //
+  //   fetch('/trims/' + model).then(function(response){
+  //     response.json().then(function(data){
+  //        let optionHTML = '';
+  //        for(let trim of data.trims){
+  //          optionHTML += '<option value="' + trim.id + '">' + trim.name + '</option>';
+  //        }
+  //
+  //       trim_select.innerHTML = optionHTML;
+  //     });
+  //   });
+  // }
+  model_select.onchange = function(){
+    model = model_select.value;
+
+    fetch('/trims/' + model).then(function(response){
+      response.json().then(function(data){
+         let optionHTML = '';
+         for(let trim of data.trims){
+           optionHTML += '<option value="' + trim.id + '">' + trim.name + '</option>';
+         }
+
+        trim_select.innerHTML = optionHTML;
+      });
+    });
+  }
+
+</script>
+
+{% endblock %}

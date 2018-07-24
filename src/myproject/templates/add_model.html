@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+{% for message in get_flashed_messages() %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    {{message}}
+  </div>
+{% endfor %}
+
+{% for field in add_model_form.errors %}
+{% for error in add_model_form.errors[field] %}
+    <div class="error">{{ error }}</div>
+{% endfor %}
+{% endfor %}
+
+  <div class="jumbotron">
+    <form method="POST">
+      {{add_model_form.hidden_tag()}}
+      {{add_model_form.csrf_token()}}
+      {{add_model_form.manufacturer.label}}<br>{{add_model_form.manufacturer()}}
+
+      <br>
+      <br>
+      {{add_model_form.hidden_tag()}}
+      {{add_model_form.model.label}}<br>{{add_model_form.model()}}
+      <br>
+      {{add_model_form.submit()}}
+    </form>
+
+  </div>
+{% endblock %}
